@@ -1,0 +1,11 @@
+
+  <ul *ngFor = 'let currentRecipe of childRecipeList | completeness' (click)='haveCooked(currentRecipe)'>
+    <li>{{currentRecipe.title}}</li>
+    <ul>
+      <li>Ingredients: {{currentRecipe.ingredients}}</li>
+      <li>Directions: {{currentRecipe.directions}}</li>
+      <li [class]='difficultyColor(currentRecipe)'>Difficulty: {{currentRecipe.difficulty}}</li>
+      <li>Cooked?: {{currentRecipe.cooked}}</li>
+    </ul>
+    <button (click)='editButtonHasBeenClicked(currentRecipe)'>Edit</button>
+  </ul>

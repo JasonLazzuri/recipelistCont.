@@ -1,24 +1,39 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Recipe } from './recipe.model';
 
 @Component({
   selector: 'recipe-list',
   template: `
-  <ul *ngFor = 'let currentRecipe of childRecipeList' (click)='haveCooked(currentRecipe)'>
-    <li [class]='difficultyColor(currentRecipe)'>{{currentRecipe.title}}</li>
-    <ul>
-      <li>Ingredients: {{currentRecipe.ingredients}}</li>
-      <li>Directions: {{currentRecipe.directions}}</li>
-      <li [class]='difficultyColor(currentRecipe)'>Difficulty: {{currentRecipe.difficulty}}</li>
-      <li>Cooked?: {{currentRecipe.cooked}}</li>
-    </ul>
-    <button (click)='editRecipe(currentRecipe)'>Edit</button>
+
+  <select (change)="onChange($event.target.value)">
+    <option value="allRecipes">All Recipes</option>
+    <option value="completedRecipes">Completed Recipes</option>
+    <option value="incompleteRecipes" selected="selected">Incomplete Recipes</option>
+  </select>
+
+  <ul>
+    <li (click)="haveCooked(currentRecipe)" *ngFor="let currentRecipe of childRecipeList | completeness">{{currentRecipe.title}} {{currentRecipe.ingredients}} {{currentRecipe.directions}} {{currentRecipe.difficulty}}
+      <input *ngIf="currentRecipe.cooked === true" type="checkbox" checked (click)="toggleCooked(currentRecipe, false)"/>
+      <input *ngIf="currentRecipe.cooked === false" type="checkbox" (click)="toggleCooked(currentRecipe, true)"/>
+      <button (click)="editButtonHasBeenClicked(currentRecipe)">Edit!</button>
+    </li>
   </ul>
   `
 })
 
 export class RecipeListComponent {
    @Input() childRecipeList: Recipe[];
+   @Output() clickSender = new EventEmitter();
+
+   editButtonHasBeenClicked(currentRecipe: Recipe) {
+       this.clickSender.emit(currentRecipe);
+     }
+
+  filterByCompleteness: string = "incompleteTasks";
+
+  onChange(optionFromMenu) {
+    this.filterByCompleteness = optionFromMenu;
+  }
 
   difficultyColor(currentRecipe){
     if (currentRecipe.difficulty === 3){
@@ -38,6 +53,4 @@ export class RecipeListComponent {
      alert("This recipe has not been tried, test it out!");
    }
  }
-
-
 }
