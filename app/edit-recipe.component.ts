@@ -43,7 +43,7 @@ export class EditRecipeComponent {
 
   haveCooked(clickedRecipe: Recipe) {
     console.log(clickedRecipe)
-   if(clickedRecipe.cooked === 'true') {
+   if(clickedRecipe.cooked === true) {
      alert("This recipe has been cooked!");
    } else {
      alert("This recipe has not been tried, test it out!");

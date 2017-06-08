@@ -12,7 +12,7 @@ import { Recipe } from './recipe.model';
   </select>
 
   <ul>
-    <li (click)="haveCooked(currentRecipe)" *ngFor="let currentRecipe of childRecipeList | completeness">{{currentRecipe.title}} {{currentRecipe.ingredients}} {{currentRecipe.directions}} {{currentRecipe.difficulty}}
+    <li [class]="difficultyColor(currentRecipe)" (click)="haveCooked(currentRecipe)" *ngFor="let currentRecipe of childRecipeList | completeness:filterByCompleteness">{{currentRecipe.title}} {{currentRecipe.ingredients}} {{currentRecipe.directions}} {{currentRecipe.difficulty}}
       <input *ngIf="currentRecipe.cooked === true" type="checkbox" checked (click)="toggleCooked(currentRecipe, false)"/>
       <input *ngIf="currentRecipe.cooked === false" type="checkbox" (click)="toggleCooked(currentRecipe, true)"/>
       <button (click)="editButtonHasBeenClicked(currentRecipe)">Edit!</button>
@@ -35,6 +35,10 @@ export class RecipeListComponent {
     this.filterByCompleteness = optionFromMenu;
   }
 
+  toggleCooked(clickedRecipe: Recipe, setCompleteness: boolean) {
+   clickedRecipe.cooked = setCompleteness;
+ }
+
   difficultyColor(currentRecipe){
     if (currentRecipe.difficulty === 3){
       return "bg-danger";
@@ -47,7 +51,7 @@ export class RecipeListComponent {
 
   haveCooked(clickedRecipe: Recipe) {
     console.log(clickedRecipe)
-   if(clickedRecipe.cooked === 'true') {
+   if(clickedRecipe.cooked === true) {
      alert("This recipe has been cooked!");
    } else {
      alert("This recipe has not been tried, test it out!");
